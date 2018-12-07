@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: dotnet-dec7-spa
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: dotnet-dec7-spa
+    spec:
+      containers:
+      - name: dotnet-dec7-spa
+        image: adityaregistry.azurecr.io/dotnet-dec7_spa:#{Build.BuildId}#
+        ports:
+        - name: codeport
+          containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: dotnet-dec7-spa
+spec:
+  ports:
+  - port: 8888
+    nodePort: 31112
+    targetPort: codeport
+    protocol: TCP
+  selector:
+    app: dotnet-dec7-spa
+  type: LoadBalancer
